@@ -1,10 +1,159 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>Checkpoint Test</title>
-  </head>
-  <body style="background:black;color:white;font-family:sans-serif;">
-    <h1>It works.</h1>
-    <p>If you see this rendered, GitHub Pages is fixed.</p>
-  </body>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Change Readiness Checkpoint</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #0f172a;
+      color: #e5e7eb;
+      margin: 0;
+      padding: 40px;
+    }
+    .container {
+      max-width: 720px;
+      margin: auto;
+      background: #020617;
+      padding: 32px;
+      border-radius: 12px;
+      box-shadow: 0 0 40px rgba(0,0,0,0.4);
+    }
+    h1 {
+      margin-top: 0;
+      font-size: 28px;
+    }
+    p {
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+    .question {
+      margin: 32px 0;
+    }
+    label {
+      display: block;
+      margin-bottom: 12px;
+      font-weight: 600;
+    }
+    select, textarea, input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      background: #020617;
+      color: #e5e7eb;
+      border: 1px solid #334155;
+    }
+    button {
+      margin-top: 24px;
+      padding: 14px 24px;
+      border-radius: 10px;
+      border: none;
+      background: #38bdf8;
+      color: #020617;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .hidden {
+      display: none;
+    }
+    .cta {
+      background: #020617;
+      border: 1px solid #334155;
+      padding: 24px;
+      border-radius: 10px;
+      margin-top: 32px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+
+    <h1>Change Readiness Checkpoint</h1>
+    <p>
+      This is a short diagnostic to surface **early signals of change risk**.
+      No scoring. No judgment. Just clarity.
+    </p>
+
+    <form id="checkpointForm">
+
+      <div class="question">
+        <label>1. Who is formally accountable for this change today?</label>
+        <select required>
+          <option value="">Select one</option>
+          <option>CEO / President</option>
+          <option>Executive Sponsor</option>
+          <option>Program / Transformation Lead</option>
+          <option>No single owner</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label>2. What problem or opportunity is this change meant to address?</label>
+        <textarea rows="3" placeholder="In one or two sentences"></textarea>
+      </div>
+
+      <div class="question">
+        <label>3. How confident are you that leaders share the same understanding?</label>
+        <select>
+          <option value="">Select one</option>
+          <option>High confidence</option>
+          <option>Some alignment, some gaps</option>
+          <option>Low confidence</option>
+          <option>Unknown</option>
+        </select>
+      </div>
+
+      <div class="question">
+        <label>4. If this change fails, what is the cost?</label>
+        <select>
+          <option value="">Select one</option>
+          <option>Limited / reversible</option>
+          <option>Material but contained</option>
+          <option>Strategic or reputational</option>
+          <option>Unclear</option>
+        </select>
+      </div>
+
+      <button type="submit">View My Checkpoint Result</button>
+    </form>
+
+    <div id="result" class="hidden">
+      <div class="cta">
+        <h2>What this tells us</h2>
+        <p>
+          Your answers suggest there is **non-trivial change risk** worth examining
+          before execution accelerates.
+        </p>
+        <p>
+          The next step is a **Change Readiness Briefing** — a short, structured
+          conversation to interpret these signals and decide how to proceed.
+        </p>
+
+        <p><strong>No cost. No commitment.</strong></p>
+
+        <button onclick="bookCall()">Book a 30-min Briefing</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const form = document.getElementById("checkpointForm");
+    const result = document.getElementById("result");
+
+    form.addEventListener("submit", function (e) {
+      e.preventDefault();
+      form.classList.add("hidden");
+      result.classList.remove("hidden");
+    });
+
+    function bookCall() {
+      // Replace with Calendly / email / link
+      window.location.href = "mailto:youremail@domain.com?subject=Change Readiness Briefing";
+    }
+  </script>
+</body>
 </html>

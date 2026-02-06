@@ -132,8 +132,19 @@
     }
   </style>
 </head>
+<script>
+  const ACCESS_CODE = "mrld";
 
-<body>
+  function checkAccess() {
+    const input = document.getElementById("accessInput").value;
+    if (input === ACCESS_CODE) {
+      document.getElementById("access-gate").style.display = "none";
+      document.getElementById("protected-content").style.display = "block";
+    } else {
+      alert("Invalid access code");
+    }
+  }
+</script><body>
 <div class="container">
 
   <div class="authority">CONFIDENTIAL · DIAGNOSTIC USE ONLY</div>

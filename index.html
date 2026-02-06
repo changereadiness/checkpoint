@@ -7,93 +7,92 @@
 
   <style>
     body {
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #0f172a;
-      color: #e5e7eb;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: #f7f7f7;
+      color: #111;
       margin: 0;
-      padding: 40px;
+      padding: 0;
     }
 
     .container {
       max-width: 720px;
-      margin: auto;
-      background: #020617;
+      margin: 40px auto;
+      background: #fff;
       padding: 32px;
-      border-radius: 12px;
-      box-shadow: 0 0 40px rgba(0,0,0,0.4);
+      border-radius: 8px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.08);
     }
 
     h1 {
-      margin-top: 0;
       font-size: 28px;
-    }
-
-    h2 {
-      margin-top: 0;
+      margin-bottom: 8px;
     }
 
     p {
-      color: #94a3b8;
       line-height: 1.6;
     }
 
-    .question {
-      margin: 32px 0;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 12px;
-      font-weight: 600;
-    }
-
-    select, textarea, input {
-      width: 100%;
-      padding: 12px;
-      border-radius: 8px;
-      border: 1px solid #334155;
-      background: #020617;
-      color: #e5e7eb;
+    .muted {
+      color: #555;
       font-size: 14px;
     }
 
-    textarea {
-      resize: vertical;
+    .question {
+      margin: 24px 0;
+    }
+
+    .question label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .question select {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
     }
 
     button {
-      margin-top: 24px;
-      padding: 14px 24px;
-      border-radius: 10px;
+      padding: 12px 18px;
+      font-size: 16px;
+      border-radius: 6px;
       border: none;
-      background: #38bdf8;
-      color: #020617;
-      font-weight: 700;
       cursor: pointer;
     }
 
-    button.secondary {
-      background: transparent;
-      color: #38bdf8;
-      border: 1px solid #38bdf8;
-      margin-left: 12px;
+    .primary {
+      background: #111;
+      color: #fff;
+    }
+
+    .secondary {
+      background: #e5e5e5;
+      color: #111;
+    }
+
+    .actions {
+      margin-top: 32px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
     .hidden {
       display: none;
     }
 
-    .cta {
-      border: 1px solid #334155;
-      padding: 24px;
-      border-radius: 10px;
-      margin-top: 32px;
+    input[type="email"] {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      margin-top: 12px;
+      margin-bottom: 12px;
     }
 
-    .fine {
-      font-size: 13px;
-      color: #64748b;
-      margin-top: 12px;
+    .divider {
+      margin: 32px 0;
+      border-top: 1px solid #ddd;
     }
   </style>
 </head>
@@ -101,141 +100,121 @@
 <body>
   <div class="container">
 
-    <h1>Change Readiness Checkpoint</h1>
+    <!-- INTRO -->
+    <div id="intro">
+      <h1>Change Readiness Checkpoint</h1>
+      <p>
+        A fast, signal-based assessment to surface early risks before change initiatives fail.
+      </p>
+      <p class="muted">⏱️ Takes ~1 minute</p>
+      <button class="primary" onclick="startAssessment()">Start checkpoint</button>
+    </div>
 
-    <p>
-      This checkpoint surfaces early signals of change risk.<br />
-      It does not score you.<br />
-      It does not judge you.<br />
-      It highlights where assumptions may still be implicit.
-    </p>
+    <!-- QUESTIONS -->
+    <div id="assessment" class="hidden">
 
-    <p>
-      Most initiatives fail not because of execution,
-      but because key conditions were never made explicit.
-    </p>
+      <div id="questions"></div>
 
-    <form id="checkpointForm">
-
-      <div class="question">
-        <label>1. Who is formally accountable for this change today?</label>
-        <select required>
-          <option value="">Select one</option>
-          <option>CEO / President</option>
-          <option>Executive Sponsor</option>
-          <option>Program / Transformation Lead</option>
-          <option>No single owner</option>
-        </select>
+      <div class="actions" id="continueActions">
+        <button class="primary" onclick="showResults()">Get my results</button>
       </div>
 
-      <div class="question">
-        <label>2. What problem or opportunity is this initiative intended to address?</label>
-        <textarea rows="3" placeholder="One or two sentences is enough"></textarea>
+      <div class="actions hidden" id="deeperActions">
+        <button class="primary" onclick="showResults()">Get my results now</button>
+        <button class="secondary" onclick="revealMore()">Answer 5 more questions (~2 min)</button>
       </div>
 
-      <div class="question">
-        <label>3. How confident are you that leaders share the same understanding?</label>
-        <select>
-          <option value="">Select one</option>
-          <option>High confidence</option>
-          <option>Some alignment, some gaps</option>
-          <option>Low confidence</option>
-          <option>Unknown</option>
-        </select>
-      </div>
+    </div>
 
-      <div class="question">
-        <label>4. If this change fails, what is the cost?</label>
-        <select>
-          <option value="">Select one</option>
-          <option>Limited / reversible</option>
-          <option>Material but contained</option>
-          <option>Strategic or reputational</option>
-          <option>Unclear</option>
-        </select>
-      </div>
+    <!-- RESULTS -->
+    <div id="results" class="hidden">
+      <h1>Your checkpoint results</h1>
+      <p id="resultMessage"></p>
 
-      <button type="submit">View my checkpoint insight</button>
-    </form>
+      <div class="divider"></div>
 
-    <div id="result" class="hidden">
+      <h3>Want to go further?</h3>
+      <p>
+        Leave your email and I’ll review your responses and follow up if there’s value in going deeper.
+      </p>
 
-      <div class="cta">
-        <h2>What this suggests</h2>
+      <input type="email" placeholder="Your email address" />
+      <button class="primary">Submit</button>
 
-        <p id="insightText"></p>
-
-        <div class="question">
-          <label>
-            If you’d like a short written summary of these signals,
-            leave your email below.
-          </label>
-          <input type="email" placeholder="you@company.com" />
-          <p class="fine">
-            No mailing list. This is only used to continue the conversation.
-          </p>
-        </div>
-
-        <button onclick="requestBriefing()">Ask me to review this with you</button>
-        <button class="secondary" onclick="openCalendly()">Or book directly</button>
+      <div class="actions">
+        <button class="secondary" onclick="resetAssessment()">Retake assessment</button>
       </div>
     </div>
 
   </div>
 
-  <script>
-    const form = document.getElementById("checkpointForm");
-    const result = document.getElementById("result");
-    const insight = document.getElementById("insightText");
+<script>
+  const baseQuestions = [
+    "Is there a single accountable owner for this change?",
+    "Is the purpose of the change clearly articulated?",
+    "Are key stakeholders aligned on the objective?",
+    "Does leadership actively support the initiative?",
+    "Are roles and decision rights clear?"
+  ];
 
-    form.addEventListener("submit", function (e) {
-      e.preventDefault();
+  const extraQuestions = [
+    "Are risks being openly discussed today?",
+    "Is there a clear success definition?",
+    "Do teams understand what will change for them?",
+    "Are resources realistically allocated?",
+    "Is feedback actively incorporated?"
+  ];
 
-      const selects = form.querySelectorAll("select");
-      let implicitSignals = 0;
+  let currentQuestions = [];
+  let answeredCount = 0;
 
-      selects.forEach(s => {
-        if (
-          s.value.includes("No single owner") ||
-          s.value.includes("Low confidence") ||
-          s.value.includes("Unclear")
-        ) {
-          implicitSignals++;
-        }
-      });
+  function startAssessment() {
+    document.getElementById("intro").classList.add("hidden");
+    document.getElementById("assessment").classList.remove("hidden");
+    loadQuestions(baseQuestions);
+    document.getElementById("deeperActions").classList.remove("hidden");
+  }
 
-      let message = `
-        Your responses suggest that some assumptions around ownership,
-        alignment, or impact may not yet be fully explicit.
-
-        This does not mean the initiative is flawed.
-        It means the conditions for success may not yet be shared.
+  function loadQuestions(questions) {
+    const container = document.getElementById("questions");
+    questions.forEach(q => {
+      const div = document.createElement("div");
+      div.className = "question";
+      div.innerHTML = `
+        <label>${q}</label>
+        <select>
+          <option value="">Select…</option>
+          <option>Yes</option>
+          <option>Somewhat</option>
+          <option>No</option>
+        </select>
       `;
-
-      if (implicitSignals === 0) {
-        message = `
-          Your responses suggest a relatively strong baseline of clarity.
-
-          Remaining risk is less about execution
-          and more about how consistently this clarity is held
-          across leaders and teams.
-        `;
-      }
-
-      insight.innerText = message.trim();
-
-      form.classList.add("hidden");
-      result.classList.remove("hidden");
+      container.appendChild(div);
     });
+    currentQuestions = currentQuestions.concat(questions);
+  }
 
-    function requestBriefing() {
-      window.location.href =
-        "mailto:youremail@domain.com?subject=Change Readiness Briefing Request";
-    }
+  function revealMore() {
+    loadQuestions(extraQuestions);
+    document.getElementById("deeperActions").classList.add("hidden");
+  }
 
-    function openCalendly() {
-      window.location.href = "https://calendly.com/mrld";
-    }
-  </script>
+  function showResults() {
+    document.getElementById("assessment").classList.add("hidden");
+    document.getElementById("results").classList.remove("hidden");
+
+    // Placeholder logic
+    const message = Math.random() > 0.5
+      ? "Your responses suggest early risk signals that are worth examining more closely."
+      : "Your responses indicate a generally healthy starting position, with a few areas worth double-checking.";
+
+    document.getElementById("resultMessage").innerText = message;
+  }
+
+  function resetAssessment() {
+    location.reload();
+  }
+</script>
+
 </body>
 </html>

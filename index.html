@@ -16,19 +16,20 @@
 
     .container {
       max-width: 760px;
-      margin: 40px auto 120px;
+      margin: 40px auto;
       background: #fff;
       padding: 40px;
       border-radius: 10px;
       box-shadow: 0 12px 32px rgba(0,0,0,0.08);
     }
 
-    h1 { font-size: 28px; margin-bottom: 8px; }
-    p { line-height: 1.6; }
+    h1 {
+      font-size: 28px;
+      margin-bottom: 8px;
+    }
 
-    .muted {
-      color: #555;
-      font-size: 14px;
+    p {
+      line-height: 1.6;
     }
 
     .authority {
@@ -38,15 +39,23 @@
       margin-bottom: 24px;
     }
 
+    .muted {
+      color: #555;
+      font-size: 14px;
+    }
+
     .question {
       margin: 48px 0;
+      opacity: 0.4;
       transition: opacity 0.2s ease;
     }
 
-    .question.inactive { opacity: 0.4; }
+    .question.active {
+      opacity: 1;
+    }
 
     .statement {
-      font-weight: 600;
+      font-weight: 500;
       margin-bottom: 14px;
     }
 
@@ -62,9 +71,8 @@
       border-radius: 6px;
       cursor: pointer;
       flex: 1;
-      min-width: 140px;
+      min-width: 120px;
       text-align: center;
-      font-weight: 500;
     }
 
     .option.selected {
@@ -72,18 +80,11 @@
       background: #f0f0f0;
     }
 
-    .hidden { display: none; }
-
-    #submitBar {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      background: rgba(255,255,255,0.97);
-      border-top: 1px solid #ddd;
-      padding: 16px 24px;
-      text-align: right;
-      box-shadow: 0 -6px 18px rgba(0,0,0,0.06);
+    .actions {
+      margin-top: 48px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
     }
 
     button {
@@ -94,8 +95,15 @@
       cursor: pointer;
     }
 
-    .primary { background: #111; color: #fff; }
-    .secondary { background: #e5e5e5; color: #111; }
+    .primary {
+      background: #111;
+      color: #fff;
+    }
+
+    .secondary {
+      background: #e5e5e5;
+      color: #111;
+    }
 
     .signal {
       padding: 20px;
@@ -104,42 +112,34 @@
       font-weight: 600;
     }
 
-    .signal.high { background: #fbeaea; color: #8a1f1f; }
-    .signal.low { background: #eef6ee; color: #1f6b2e; }
+    .signal.high {
+      background: #fbeaea;
+      color: #8a1f1f;
+    }
 
-    input[type="email"], input[type="password"] {
-      width: 100%;
-      padding: 12px;
-      font-size: 16px;
-      margin: 12px 0;
+    .signal.low {
+      background: #eef6ee;
+      color: #1f6b2e;
     }
 
     .divider {
       margin: 40px 0;
       border-top: 1px solid #ddd;
     }
+
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 
 <body>
-
 <div class="container">
 
-  <!-- ACCESS GATE -->
-  <div id="gate">
-    <div class="authority">PRIVATE ACCESS</div>
-    <h1>CRB — Change Readiness Checkpoint</h1>
-    <p>This diagnostic is shared selectively with senior leaders.</p>
-
-    <input type="password" id="accessCode" placeholder="Access code" />
-    <button class="primary" onclick="unlock()">Enter checkpoint</button>
-
-    <p id="gateError" class="muted hidden">Invalid access code.</p>
-  </div>
+  <div class="authority">CONFIDENTIAL · DIAGNOSTIC USE ONLY</div>
 
   <!-- INTRO -->
-  <div id="intro" class="hidden">
-    <div class="authority">CONFIDENTIAL · DIAGNOSTIC USE ONLY</div>
+  <div id="intro">
     <h1>Change Readiness Checkpoint</h1>
     <p>
       A private diagnostic to surface early conditions that quietly undermine
@@ -153,11 +153,14 @@
   <div id="assessment" class="hidden">
     <div id="questions"></div>
 
-    <div class="divider"></div>
-
-    <button class="secondary" onclick="revealMore()">
-      Proceed with deeper signal check (~2 min)
-    </button>
+    <div class="actions">
+      <button class="secondary" id="deeperBtn" onclick="revealMore()">
+        Proceed with deeper signal check (~2 min)
+      </button>
+      <button class="primary" onclick="showResults()">
+        Submit checkpoint
+      </button>
+    </div>
   </div>
 
   <!-- RESULTS -->
@@ -169,44 +172,27 @@
 
     <div class="divider"></div>
 
-    <h2>Optional follow-up</h2>
     <p>
-      If useful, leave your email and I’ll personally review the signal and
-      follow up where deeper examination is warranted.
+      If this surfaced something worth examining, you’re welcome to connect
+      with me directly on LinkedIn.
     </p>
 
-    <form action="https://formspree.io/f/REPLACE_ME" method="POST">
-      <input type="email" name="email" required placeholder="Email address" />
-      <input type="hidden" name="signal" id="signalField" />
-      <button class="primary" type="submit">Submit</button>
-    </form>
+    <p>
+      <a href="https://linkedin.com/in/sayudi" target="_blank">
+        linkedin.com/in/sayudi
+      </a>
+    </p>
+
+    <div class="actions">
+      <button class="secondary" onclick="restartCheckpoint()">
+        Restart checkpoint
+      </button>
+    </div>
   </div>
 
 </div>
 
-<div id="submitBar" class="hidden">
-  <button class="primary" onclick="showResults()">Submit checkpoint</button>
-</div>
-
 <script>
-  const ACCESS_CODE = "CRB-2026";
-
-  if (sessionStorage.getItem("crbAccess") === "granted") {
-    gate.classList.add("hidden");
-    intro.classList.remove("hidden");
-  }
-
-  function unlock() {
-    const input = document.getElementById("accessCode").value;
-    if (input === ACCESS_CODE) {
-      sessionStorage.setItem("crbAccess", "granted");
-      gate.classList.add("hidden");
-      intro.classList.remove("hidden");
-    } else {
-      document.getElementById("gateError").classList.remove("hidden");
-    }
-  }
-
   const baseStatements = [
     "Leadership accountability for this change is clearly owned.",
     "The purpose of the initiative is unambiguous.",
@@ -223,12 +209,12 @@
     "Feedback is actively incorporated into decisions."
   ];
 
-  let responses = [];
+  let score = 0;
+  let deeperUsed = false;
 
   function startAssessment() {
     intro.classList.add("hidden");
     assessment.classList.remove("hidden");
-    submitBar.classList.remove("hidden");
     loadStatements(baseStatements);
   }
 
@@ -236,70 +222,69 @@
     const container = document.getElementById("questions");
 
     statements.forEach(statement => {
-      const index = responses.length;
-      responses.push(null);
-
       const q = document.createElement("div");
-      q.className = "question inactive";
+      q.className = "question";
 
       q.innerHTML = `
         <div class="statement">${statement}</div>
         <div class="options">
-          <div class="option" onclick="selectOption(${index}, this, 2)">Strongly true</div>
-          <div class="option" onclick="selectOption(${index}, this, 1)">Partially true</div>
-          <div class="option" onclick="selectOption(${index}, this, 0)">Not true</div>
+          <div class="option" onclick="selectOption(this,2)">Strongly true</div>
+          <div class="option" onclick="selectOption(this,1)">Partially true</div>
+          <div class="option" onclick="selectOption(this,0)">Not true</div>
         </div>
       `;
 
       container.appendChild(q);
-      setActiveQuestion();
+      updateActive();
     });
   }
 
-  function selectOption(index, el, value) {
-    responses[index] = value;
-    const options = el.parentElement.querySelectorAll(".option");
-    options.forEach(o => o.classList.remove("selected"));
+  function selectOption(el, value) {
+    const q = el.closest(".question");
+    q.querySelectorAll(".option").forEach(o => o.classList.remove("selected"));
     el.classList.add("selected");
-    setActiveQuestion();
+    score += value;
+    updateActive();
   }
 
-  function setActiveQuestion() {
+  function updateActive() {
     const questions = document.querySelectorAll(".question");
-    questions.forEach((q, i) => {
-      q.classList.toggle("inactive", i !== questions.length - 1);
-    });
+    questions.forEach(q => q.classList.remove("active"));
+    if (questions.length) {
+      questions[questions.length - 1].classList.add("active");
+    }
   }
 
   function revealMore() {
+    if (deeperUsed) return;
+    deeperUsed = true;
     loadStatements(extraStatements);
+    document.getElementById("deeperBtn").disabled = true;
+    document.getElementById("deeperBtn").innerText = "Extended signal loaded";
   }
 
   function showResults() {
     assessment.classList.add("hidden");
-    submitBar.classList.add("hidden");
     results.classList.remove("hidden");
-
-    const answered = responses.filter(v => v !== null);
-    const avgScore = answered.reduce((a, b) => a + b, 0) / answered.length;
 
     const signalBox = document.getElementById("signalBox");
     const message = document.getElementById("resultMessage");
-    const signalField = document.getElementById("signalField");
 
-    if (avgScore < 1.2) {
+    if (score < 18) {
       signalBox.className = "signal high";
       signalBox.innerText = "⚠ Elevated execution risk detected";
       message.innerText =
-        "The signal suggests structural conditions that frequently erode execution momentum if left unexamined. These risks tend to surface late, when correction is most expensive.";
-      signalField.value = "Elevated risk";
+        "The signal suggests conditions that frequently erode execution momentum if left unexamined. These risks tend to surface late, when correction is most expensive.";
     } else {
       signalBox.className = "signal low";
       signalBox.innerText = "✓ Generally stable starting position";
       message.innerText =
-        "The signal indicates a stable foundation, with a limited number of areas worth examining before scale and irreversible commitments increase.";
-      signalField.value = "Generally stable";
+        "The signal indicates a stable foundation, with a small number of areas worth examining before scale and irreversible commitments increase.";
     }
+  }
+
+  function restartCheckpoint() {
+    location.reload();
   }
 </script>
 

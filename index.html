@@ -8,10 +8,9 @@
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #ffffff;
+      background: #fff;
       color: #111;
       margin: 0;
-      padding: 0;
     }
 
     .container {
@@ -20,36 +19,31 @@
       padding: 0 24px;
     }
 
-    h1, h2 {
-      font-weight: 500;
-      letter-spacing: 0.2px;
-    }
+    h1, h2 { font-weight: 500; }
 
-    p {
-      line-height: 1.6;
-      margin-bottom: 32px;
-    }
+    p { line-height: 1.6; margin-bottom: 28px; }
 
-    .statement {
-      padding: 24px;
-      margin-bottom: 20px;
+    .item {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      padding: 20px;
       border: 1px solid #e5e5e5;
-      cursor: pointer;
-      transition: all 0.15s ease;
+      margin-bottom: 16px;
     }
 
-    .statement.active {
-      border-color: #111;
-      background: #fafafa;
+    .item input {
+      margin-top: 4px;
+      transform: scale(1.2);
     }
 
     button {
       padding: 14px 22px;
       font-size: 15px;
-      cursor: pointer;
       border: 1px solid #111;
       background: #111;
       color: #fff;
+      cursor: pointer;
     }
 
     button.secondary {
@@ -63,37 +57,19 @@
       cursor: not-allowed;
     }
 
-    .center {
-      text-align: center;
-      margin: 48px 0;
-    }
+    .center { text-align: center; margin: 48px 0; }
 
-    .hidden {
-      display: none;
-    }
+    .hidden { display: none; }
 
     .signal {
       padding: 28px;
-      margin-top: 32px;
       border-radius: 6px;
-      font-weight: 500;
       white-space: pre-line;
     }
 
-    .high {
-      background: #fbeaea;
-      color: #8a1f1f;
-    }
-
-    .moderate {
-      background: #fff4e5;
-      color: #8a5a1f;
-    }
-
-    .low {
-      background: #eef6ee;
-      color: #1f6b2e;
-    }
+    .high { background: #fbeaea; color: #8a1f1f; }
+    .moderate { background: #fff4e5; color: #8a5a1f; }
+    .low { background: #eef6ee; color: #1f6b2e; }
 
     .quiet {
       font-size: 13px;
@@ -102,149 +78,103 @@
     }
 
     input[type="password"] {
-      padding: 14px;
       width: 100%;
+      padding: 14px;
       margin-bottom: 16px;
       font-size: 15px;
     }
 
-    a {
-      color: #111;
-      text-decoration: underline;
-    }
+    a { color: #111; text-decoration: underline; }
   </style>
 </head>
 
 <body>
 
-<!-- ACCESS GATE -->
-<div id="access-gate" class="container">
+<!-- ACCESS -->
+<div id="access" class="container">
   <h2>Private Access</h2>
-  <p>This checkpoint is shared intentionally.</p>
-
-  <input type="password" id="accessInput" placeholder="One-time access code" />
-  <button onclick="checkAccess()">Continue</button>
-
-  <p id="access-error" class="quiet hidden">
-    This access code is invalid or already used.
-  </p>
+  <input type="password" id="code" placeholder="One-time access code" />
+  <button onclick="enter()">Continue</button>
+  <p id="err" class="quiet hidden">Invalid or used access code.</p>
 </div>
 
 <!-- CHECKPOINT -->
 <div id="checkpoint" class="container hidden">
 
   <h1>Change Readiness Checkpoint</h1>
+  <p>Select the statements that reflect reality today.</p>
 
-  <p>
-    Select the statements that currently reflect your organization.
-    This is diagnostic — not aspirational.
-  </p>
+  <div class="item"><input type="checkbox" />Strategic intent is clearly understood by leadership.</div>
+  <div class="item"><input type="checkbox" />Decision authority is unambiguous.</div>
+  <div class="item"><input type="checkbox" />Comparable change has been absorbed before.</div>
+  <div class="item"><input type="checkbox" />Stakeholders align on outcomes.</div>
+  <div class="item"><input type="checkbox" />Resistance is visible and acknowledged.</div>
+  <div class="item"><input type="checkbox" />Leaders model the change.</div>
+  <div class="item"><input type="checkbox" />Communication channels are trusted.</div>
+  <div class="item"><input type="checkbox" />Capacity constraints are realistic.</div>
+  <div class="item"><input type="checkbox" />Cost of inaction is understood.</div>
+  <div class="item"><input type="checkbox" />Ownership exists beyond executives.</div>
 
-  <div class="statement" onclick="toggle(this)">The strategic intent of the change is clearly understood by leadership.</div>
-  <div class="statement" onclick="toggle(this)">Decision authority for this change is unambiguous.</div>
-  <div class="statement" onclick="toggle(this)">The organization has successfully absorbed comparable change before.</div>
-  <div class="statement" onclick="toggle(this)">Key stakeholders are aligned on outcomes, not just milestones.</div>
-  <div class="statement" onclick="toggle(this)">Resistance patterns are visible and acknowledged.</div>
-  <div class="statement" onclick="toggle(this)">Leaders are consistently modeling the change.</div>
-  <div class="statement" onclick="toggle(this)">Communication channels are trusted, not merely available.</div>
-  <div class="statement" onclick="toggle(this)">Capacity constraints have been realistically assessed.</div>
-  <div class="statement" onclick="toggle(this)">The cost of inaction is understood internally.</div>
-  <div class="statement" onclick="toggle(this)">There is ownership beyond the executive layer.</div>
-
-  <!-- SUBMIT -->
   <div class="center">
-    <button id="submitBtn" onclick="evaluate()" disabled>
-      Reveal checkpoint signal
-    </button>
+    <button id="reveal" onclick="reveal()">Reveal checkpoint</button>
   </div>
 
-  <!-- RESULTS -->
   <div id="result" class="hidden">
-    <div id="signalBox" class="signal"></div>
+    <div id="signal" class="signal"></div>
 
     <p>
-      To pressure-test this signal or explore second-order variables,
-      connect with me directly on LinkedIn:
-      <br />
-      <a href="https://linkedin.com/in/sayudi" target="_blank">
-        linkedin.com/in/sayudi
-      </a>
+      To discuss this signal, connect on LinkedIn:<br />
+      <a href="https://linkedin.com/in/sayudi" target="_blank">linkedin.com/in/sayudi</a>
     </p>
 
     <div class="center">
-      <button class="secondary" onclick="restart()">Restart checkpoint</button>
+      <button class="secondary" onclick="reset()">Restart</button>
     </div>
   </div>
 
-  <p class="quiet">
-    Private diagnostic checkpoint.  
-    Not a survey. Not a scorecard.
-  </p>
+  <p class="quiet">Private diagnostic. Not a survey.</p>
 </div>
 
 <script>
-  /* ===== ACCESS CONTROL ===== */
+  const CODES = ["MRLD-001", "MRLD-002", "MRLD-003"];
+  const USED = "used_codes";
 
-  const VALID_CODES = ["MRLD-001", "MRLD-002", "MRLD-003"];
-  const USED_CODES_KEY = "crb_used_codes";
+  function enter() {
+    const code = document.getElementById("code").value.trim();
+    const used = JSON.parse(localStorage.getItem(USED) || "[]");
 
-  function checkAccess() {
-    const input = document.getElementById("accessInput").value.trim();
-    const used = JSON.parse(localStorage.getItem(USED_CODES_KEY) || "[]");
-
-    if (VALID_CODES.includes(input) && !used.includes(input)) {
-      used.push(input);
-      localStorage.setItem(USED_CODES_KEY, JSON.stringify(used));
-      document.getElementById("access-gate").classList.add("hidden");
+    if (CODES.includes(code) && !used.includes(code)) {
+      used.push(code);
+      localStorage.setItem(USED, JSON.stringify(used));
+      document.getElementById("access").classList.add("hidden");
       document.getElementById("checkpoint").classList.remove("hidden");
     } else {
-      document.getElementById("access-error").classList.remove("hidden");
+      document.getElementById("err").classList.remove("hidden");
     }
   }
 
-  /* ===== CHECKPOINT LOGIC ===== */
-
-  function toggle(el) {
-    el.classList.toggle("active");
-
-    const selected = document.querySelectorAll(".statement.active").length;
-    document.getElementById("submitBtn").disabled = selected === 0;
-  }
-
-  function evaluate() {
-    const count = document.querySelectorAll(".statement.active").length;
-    const box = document.getElementById("signalBox");
+  function reveal() {
+    const count = document.querySelectorAll('input[type="checkbox"]:checked').length;
+    const box = document.getElementById("signal");
 
     if (count <= 5) {
       box.className = "signal high";
-      box.innerText =
-        "⚠️ High risk signal\n\n" +
-        "Several foundational conditions are missing. " +
-        "Proceeding at scale without intervention materially increases execution risk.";
+      box.innerText = "⚠️ High risk\n\nFoundational conditions are missing.";
     } else if (count <= 9) {
       box.className = "signal moderate";
-      box.innerText =
-        "◼︎ Moderate risk signal\n\n" +
-        "Core elements are present, but inconsistencies remain. " +
-        "This is where most change initiatives quietly derail.";
+      box.innerText = "◼︎ Moderate risk\n\nThis is where initiatives derail.";
     } else {
       box.className = "signal low";
-      box.innerText =
-        "✓ Looking good — with caveats\n\n" +
-        "The foundation appears solid. " +
-        "At this stage, risk tends to hide in less common, second-order variables.";
+      box.innerText = "✓ Looking good\n\nRisk now hides in second-order variables.";
     }
 
-    document.getElementById("submitBtn").style.display = "none";
     document.getElementById("result").classList.remove("hidden");
     document.getElementById("result").scrollIntoView({ behavior: "smooth" });
   }
 
-  function restart() {
-    document.querySelectorAll(".statement").forEach(s => s.classList.remove("active"));
+  function reset() {
+    document.querySelectorAll('input[type="checkbox"]').forEach(c => c.checked = false);
     document.getElementById("result").classList.add("hidden");
-    document.getElementById("submitBtn").style.display = "inline-block";
-    document.getElementById("submitBtn").disabled = true;
   }
 </script>
 
